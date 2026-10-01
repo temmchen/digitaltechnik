@@ -516,8 +516,8 @@ H('G', 6, 3, 6, {
   titel: 'Summe mit lauter Überträgen',
   frage: `<b>Konstruiere</b> zwei 4-Bit-Dualzahlen, deren Summe ${B('10010')} ist und bei deren Addition in <i>jeder</i> der vier Stellen ein Übertrag entsteht.`,
   felder: [
-    zahlFeld(2, 0b1011, { vor: '1. Summand:' }),
-    zahlFeld(2, 0b0111, { vor: '2. Summand:' }),
+    zahlFeld(2, 0b1011, { vor: '1. Summand:', stellen: 4 }),
+    zahlFeld(2, 0b0111, { vor: '2. Summand:', stellen: 4 }),
   ],
   regel: { name: 'summeUebertraege', summe: 0b10010, bits: 4 },
   tipp: 'Arbeite von rechts: In der Stelle 2⁰ muss 1 + 1 stehen, damit ein Übertrag entsteht und die Ergebnisziffer 0 ist. Überlege dann Stelle für Stelle weiter.',
@@ -598,9 +598,9 @@ H('H', 6, 3, 6, {
   titel: 'Eigene Subtraktionsaufgabe',
   frage: '<b>Erfinde</b> eine Subtraktionsaufgabe mit zwei 6-Bit-Dualzahlen (Minuend größer als Subtrahend), bei der beim schriftlichen Rechnen <i>genau zweimal</i> entliehen wird. Gib Minuend, Subtrahend und Differenz an.',
   felder: [
-    zahlFeld(2, 0b101010, { vor: 'Minuend:' }),
-    zahlFeld(2, 0b000101, { vor: 'Subtrahend:' }),
-    zahlFeld(2, 0b100101, { vor: 'Differenz:' }),
+    zahlFeld(2, 0b101010, { vor: 'Minuend:', stellen: 6 }),
+    zahlFeld(2, 0b000101, { vor: 'Subtrahend:', stellen: 6 }),
+    zahlFeld(2, 0b100101, { vor: 'Differenz:', stellen: 6 }),
   ],
   regel: { name: 'subtraktionEntleihungen', bits: 6, entleihungen: 2 },
   tipp: 'Eine Entleihung entsteht, wenn oben 0 und unten 1 steht – oder wenn nach einer Entleihung die Ziffer nicht mehr reicht. Plane die Stellen von rechts nach links und rechne am Ende nach.',
