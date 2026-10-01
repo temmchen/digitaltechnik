@@ -1,7 +1,7 @@
 // lernen.js – Lektionen: Übersicht aller Themen, Lektionsliste eines Themas, einzelne Lektion
 
 import { THEMEN, themaNachId } from '../themen/index.js';
-import { stufe } from '../kern/taxonomie.js';
+import { stufe, stufeVon, prozess } from '../kern/taxonomie.js';
 import { statistik } from '../kern/fortschritt.js';
 import { icon } from '../kern/icons.js';
 import { esc } from '../kern/darstellung.js';
@@ -53,7 +53,7 @@ export function lektion(main, id, nr) {
   const kap = t.kapitel.find((k) => k.id === l.kap);
   const aufgaben = t.aufgaben.filter((a) => a.kap === l.kap);
   const st = statistik(aufgaben);
-  const stufen = [...new Set(aufgaben.map((a) => a.k))].sort();
+  const stufen = [...new Set(aufgaben.map((a) => stufeVon(a.k)))].sort();
   main.innerHTML = `<div class="lektion-raster">
 <aside class="lektion-seite" aria-label="Inhalt der Lektion">
   <p class="seite-titel">In dieser Lektion</p><ol class="toc"></ol>
@@ -64,12 +64,12 @@ export function lektion(main, id, nr) {
   <nav class="brotkrumen" aria-label="Pfad"><a href="#/lernen">Lernen</a><span>›</span><a href="#/lernen/${t.id}">${esc(t.kurz)}</a><span>›</span><span>Lektion ${l.nr}</span></nav>
   <header class="lektion-kopf"><p class="kicker">Lektion ${l.nr} von ${t.lektionen.length} · ca. ${l.dauer} min · Kapitel ${l.kap}</p><h1>${esc(l.titel)}</h1><p class="lead">${esc(l.untertitel)}</p></header>
   <div class="box ziele"><div class="box-kopf">${icon('ziel')}<span>Lernziele – nach dieser Lektion kannst du …</span></div><ul class="ziel-liste">${l.ziele
-    .map(([text, k]) => `<li><span class="chip chip-k k${k}" title="Taxonomiestufe K${k}: ${stufe(k).name}">K${k}</span><span>${text}</span></li>`)
+    .map(([text, k]) => { const st = stufe(stufeVon(k)); return `<li><span class="chip chip-stufe s${st.s}" title="Taxonomiestufe ${st.s} – ${st.name}: ${st.titel}">${st.zeichen} ${prozess(k).name}</span><span>${text}</span></li>`; })
     .join('')}</ul></div>
   <div class="lektion-inhalt">${l.inhalt}</div>
   <section class="jetzt-ueben">
     <div><p class="kicker">Jetzt üben</p><h2 class="h3">Kapitel ${l.kap}: ${esc(kap ? kap.titel : '')}</h2>
-    <p>${aufgaben.length} Aufgaben auf den Stufen ${stufen.map((k) => `<span class="chip chip-k k${k}">K${k}</span>`).join(' ')}${st.richtig ? ` · ${st.richtig} schon gelöst` : ''}</p></div>
+    <p>${aufgaben.length} Aufgaben auf den Stufen ${stufen.map((s) => `<span class="chip chip-stufe s${s}">${stufe(s).zeichen} ${stufe(s).name}</span>`).join(' ')}${st.richtig ? ` · ${st.richtig} schon gelöst` : ''}</p></div>
     <a class="btn primaer gross" href="#/ueben/${t.id}?kap=${l.kap}">${icon('ueben')}<span>Aufgaben lösen</span></a>
   </section>
   <nav class="lektion-nav" aria-label="Weitere Lektionen">

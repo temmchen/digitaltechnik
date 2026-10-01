@@ -1,7 +1,7 @@
 // lehrer.js – Lehrerbereich: Anmeldung, Übersicht, Prüfung erstellen, Lösungsschlüssel, Hinweise
 
 import { THEMEN, pool } from '../themen/index.js';
-import { TAXONOMIE } from '../kern/taxonomie.js';
+import { STUFEN, stufeVon, prozess } from '../kern/taxonomie.js';
 import { stellePruefungZusammen, ersetzeAufgabe, parallelGruppe, VORLAGEN, verfuegbar, summePunkte } from '../kern/pruefungsplan.js';
 import { neuerStartwert } from '../kern/varianten.js';
 import { anmelden, abmelden, istLehrer, lehrerInhalt, tresorVorhanden, loesungenDirekt, setzeLoesungenDirekt } from '../kern/lehrer.js';
@@ -131,9 +131,9 @@ function erstelleForm(box) {
 <label>Hilfsmittel <input name="hilfsmittel" value="${esc(e.hilfsmittel)}"></label>
 <label class="breit">Hinweis auf dem Blatt <input name="hinweis" value="${esc(e.hinweis)}"></label>
 </div></fieldset>
-<fieldset><legend>Aufgaben je Taxonomiestufe</legend>
+<fieldset><legend>Aufgaben je Taxonomiestufe</legend><p class="neben">Innerhalb einer Stufe werden die Denkprozesse gemischt (bei „schwer“ z. B. Analysieren, Bewerten und Erschaffen) und die Aufgaben auf möglichst viele Kapitel verteilt.</p>
 <div class="vorlage-wahl">${Object.entries(VORLAGEN).map(([id, vl]) => `<button type="button" class="chip-knopf" data-vorlage="${id}" aria-pressed="${e.vorlage === id}">${vl.name} · ${vl.dauer} min</button>`).join('')}</div>
-<div class="stufen-eingabe">${TAXONOMIE.map((t) => `<label class="stufe-feld"><span class="chip chip-k k${t.k}">K${t.k}</span><span class="sf-name">${t.name}</span><input type="number" name="k${t.k}" min="0" max="${v[t.k]}" value="${e.plan[t.k] || 0}"><small>von ${v[t.k]}</small></label>`).join('')}</div>
+<div class="stufen-eingabe">${STUFEN.map((t) => `<label class="stufe-feld"><span class="chip chip-stufe s${t.s}">${t.zeichen} ${t.name}</span><span class="sf-name">${t.titel}</span><input type="number" name="s${t.s}" min="0" max="${v[t.s]}" value="${e.plan[t.s] || 0}"><small>von ${v[t.s]}</small></label>`).join('')}</div>
 </fieldset>
 <fieldset><legend>Inhalte</legend>${THEMEN.map((t) => `<div class="kw-thema"><b>${esc(t.titel)}</b><div class="chips-wahl">${t.kapitel
     .map((k) => `<label class="chip-check"><input type="checkbox" name="kap" value="${t.id}:${k.id}"${(e.auswahl[t.id] || []).includes(k.id) ? ' checked' : ''}><span>${k.id} · ${esc(k.kurz)}</span></label>`)
@@ -160,7 +160,7 @@ function erstelleForm(box) {
       dauer: Number(f.dauer.value) || 45, hilfsmittel: f.hilfsmittel.value, hinweis: f.hinweis.value, auswahl,
       neueZahlen: f.neueZahlen.checked, gruppeB: f.gruppeB.checked, taxonomie: f.taxonomie.checked,
       startwert: Number(f.startwert.value) || 1,
-      plan: Object.fromEntries(TAXONOMIE.map((t) => [t.k, Math.max(0, Number(f[`k${t.k}`].value) || 0)])),
+      plan: Object.fromEntries(STUFEN.map((t) => [t.s, Math.max(0, Number(f[`s${t.s}`].value) || 0)])),
     });
     schreibe('lehrer-generator', e);
   };
@@ -182,10 +182,10 @@ function erstelleForm(box) {
     if (ev.target.name === 'kap') {
       lesen();
       const v2 = verfuegbar(pool(e.auswahl));
-      TAXONOMIE.forEach((t) => {
-        const inp = form.elements[`k${t.k}`];
-        inp.max = v2[t.k];
-        inp.nextElementSibling.textContent = `von ${v2[t.k]}`;
+      STUFEN.forEach((t) => {
+        const inp = form.elements[`s${t.s}`];
+        inp.max = v2[t.s];
+        inp.nextElementSibling.textContent = `von ${v2[t.s]}`;
       });
     }
   });
@@ -222,14 +222,14 @@ function blattHTML(art) {
 function zeigeErgebnis(ziel) {
   const e = generator.einstellungen;
   const a = generator.a;
-  const fehlt = Object.entries(generator.fehlend || {}).map(([k, n]) => `${n}× K${k}`).join(', ');
+  const fehlt = Object.entries(generator.fehlend || {}).map(([k, n]) => `${n}× ${STUFEN[k - 1].zeichen} ${STUFEN[k - 1].name}`).join(', ');
   const blaetter = [['a-aufgaben', generator.b ? 'Aufgabenblatt A' : 'Aufgabenblatt'], ['a-loesung', generator.b ? 'Lösungsblatt A' : 'Lösungsblatt']];
   if (generator.b) blaetter.push(['b-aufgaben', 'Aufgabenblatt B'], ['b-loesung', 'Lösungsblatt B']);
   ziel.innerHTML = `<section class="karte-flaeche generator-zusammenfassung">
 <h2 class="h3">${a.length} Aufgaben · ${fmtP(summePunkte(a))} Punkte · Startwert ${e.startwert}</h2>
 ${fehlt ? `<p class="warnung">In den gewählten Kapiteln gibt es zu wenige Aufgaben: es fehlen ${fehlt}.</p>` : ''}
 <div class="zusammenfassung-gitter"><div>${taxonomieTabelleHTML(a)}</div>
-<ol class="auswahl-liste">${a.map((x, i) => `<li><span class="al-nr">${i + 1}</span><span class="chip chip-k k${x.k}">K${x.k}</span><span class="al-titel">${esc(x.titel)}<small>${esc(x.schluessel)}${x.variante ? ' · neue Zahlen' : ''} · ${fmtP(x.punkte)} P</small></span><button type="button" class="btn leise klein" data-ersetze="${i}" title="Durch eine andere Aufgabe derselben Stufe ersetzen">${icon('neu')}<span>ersetzen</span></button></li>`).join('')}</ol></div>
+<ol class="auswahl-liste">${a.map((x, i) => `<li><span class="al-nr">${i + 1}</span><span class="chip chip-stufe s${stufeVon(x.k)}">${STUFEN[stufeVon(x.k) - 1].zeichen} ${STUFEN[stufeVon(x.k) - 1].name}</span><span class="al-titel">${esc(x.titel)}<small>${esc(x.schluessel)} · ${prozess(x.k).name}${x.variante ? ' · neue Zahlen' : ''} · ${fmtP(x.punkte)} P</small></span><button type="button" class="btn leise klein" data-ersetze="${i}" title="Durch eine andere Aufgabe derselben Stufe ersetzen">${icon('neu')}<span>ersetzen</span></button></li>`).join('')}</ol></div>
 </section>
 <div class="blatt-wahl" role="tablist">${blaetter.map(([id, t]) => `<button type="button" role="tab" class="chip-knopf" data-blatt="${id}" aria-pressed="${generator.blatt === id}">${t}</button>`).join('')}
 <button type="button" class="btn primaer" data-g="drucken">${icon('drucken')}<span>Dieses Blatt drucken</span></button></div>
@@ -260,7 +260,9 @@ ${fehlt ? `<p class="warnung">In den gewählten Kapiteln gibt es zu wenige Aufga
 
 function pruefungErstellen(box) {
   if (!generator) {
-    generator = { einstellungen: { ...standardEinstellungen(), ...(lies('lehrer-generator', null) || {}) }, a: [], b: null, blatt: 'a-aufgaben' };
+    const gespeichert = lies('lehrer-generator', null) || {};
+    if (gespeichert.plan && Object.keys(gespeichert.plan).some((k) => Number(k) > 3)) delete gespeichert.plan; // Plan aus älterer Fassung
+    generator = { einstellungen: { ...standardEinstellungen(), ...gespeichert }, a: [], b: null, blatt: 'a-aufgaben' };
     generator.einstellungen.datum = heute();
   }
   erstelleForm(box);

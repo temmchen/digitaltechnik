@@ -1,7 +1,7 @@
-// ueben.js – Aufgaben üben: Lernstand, Aufgabenraster, Filter (Kapitel, Stufe, Niveau, Status), Karten
+// ueben.js – Aufgaben üben: Lernstand, Aufgabenraster, Filter (Kapitel, Taxonomiestufe, Status), Karten
 
 import { THEMEN, themaNachId } from '../themen/index.js';
-import { TAXONOMIE, NIVEAU } from '../kern/taxonomie.js';
+import { STUFEN, stufeVon, prozess } from '../kern/taxonomie.js';
 import * as F from '../kern/fortschritt.js';
 import { variante, zufall } from '../kern/varianten.js';
 import { istLehrer, loesungenDirekt, setzeLoesungenDirekt } from '../kern/lehrer.js';
@@ -23,10 +23,10 @@ function themenWahl(main) {
 function lernstandHTML(t) {
   const st = F.statistik(t.aufgaben);
   const anteil = Math.round((st.richtig / st.gesamt) * 100);
-  const stufen = TAXONOMIE.map((s) => {
-    const j = st.jeStufe[s.k];
+  const stufen = STUFEN.map((s) => {
+    const j = st.jeStufe[s.s];
     if (!j.gesamt) return '';
-    return `<div class="ls-stufe" title="K${s.k} ${s.name}: ${j.richtig} von ${j.gesamt} gelöst"><span class="chip chip-k k${s.k}">K${s.k}</span><span class="mini-balken"><span style="width:${Math.round((j.richtig / j.gesamt) * 100)}%"></span></span><small>${j.richtig}/${j.gesamt}</small></div>`;
+    return `<div class="ls-stufe" title="Stufe ${s.s} – ${s.name} (${s.titel}): ${j.richtig} von ${j.gesamt} gelöst"><span class="chip chip-stufe s${s.s}">${s.zeichen} ${s.name}</span><span class="mini-balken"><span style="width:${Math.round((j.richtig / j.gesamt) * 100)}%"></span></span><small>${j.richtig}/${j.gesamt}</small></div>`;
   }).join('');
   return `<div class="ring" style="--anteil:${anteil}"><b>${st.richtig}</b><small>von ${st.gesamt}</small></div>
 <div class="ls-text"><p><b>${st.richtig} gelöst</b>${st.ersterVersuch ? ` (${st.ersterVersuch} beim ersten Versuch)` : ''} · ${st.teilweise + st.falsch} angefangen · ${st.gesehen} mit Lösung · ${st.offen} offen</p>
@@ -37,7 +37,7 @@ function rasterHTML(t) {
   return t.kapitel.map((k) => {
     const felder = t.aufgaben.filter((a) => a.kap === k.id).map((a) => {
       const s = F.anzeigeStatus(a.schluessel);
-      return `<a class="raster-feld st-${s}" href="#/ueben/${t.id}/${a.nr}" data-schluessel="${a.schluessel}" title="Aufgabe ${a.nr}: ${esc(a.titel)} – K${a.k} – ${STATUS_TEXT[s]}">${a.nr}</a>`;
+      return `<a class="raster-feld st-${s}" href="#/ueben/${t.id}/${a.nr}" data-schluessel="${a.schluessel}" title="Aufgabe ${a.nr}: ${esc(a.titel)} – ${STUFEN[stufeVon(a.k) - 1].name}, ${prozess(a.k).name} – ${STATUS_TEXT[s]}">${a.nr}</a>`;
     }).join('');
     return `<div class="raster-gruppe"><span class="raster-kap" title="${esc(k.titel)}">${k.id}</span>${felder}</div>`;
   }).join('');
@@ -47,12 +47,10 @@ function filterHTML(t, f) {
   const kap = `<button type="button" class="chip-knopf" data-filter="kap" data-wert="" aria-pressed="${!f.kap}">Alle</button>${t.kapitel
     .map((k) => `<button type="button" class="chip-knopf" data-filter="kap" data-wert="${k.id}" aria-pressed="${f.kap === k.id}" title="${esc(k.titel)}">${k.id} · ${esc(k.kurz)}</button>`)
     .join('')}`;
-  const stufen = TAXONOMIE.map((s) => `<button type="button" class="chip-knopf k-knopf k${s.k}" data-filter="k" data-wert="${s.k}" aria-pressed="${f.k.has(s.k)}" title="K${s.k}: ${s.name}">K${s.k}</button>`).join('');
-  const niveaus = [1, 2, 3].map((n) => `<button type="button" class="chip-knopf" data-filter="niveau" data-wert="${n}" aria-pressed="${f.niveau.has(n)}" title="Niveau ${NIVEAU[n].name}"><span class="niveau n${n}">${NIVEAU[n].zeichen}</span></button>`).join('');
+  const stufen = STUFEN.map((s) => `<button type="button" class="chip-knopf s-knopf s${s.s}" data-filter="stufe" data-wert="${s.s}" aria-pressed="${f.stufe.has(s.s)}" title="Stufe ${s.s}: ${s.titel} (${s.afb})">${s.zeichen} ${s.name}</button>`).join('');
   return `<div class="filter-gruppe"><span class="filter-titel">Kapitel</span><div class="chips-wahl">${kap}</div></div>
 <div class="filter-zeile">
-<div class="filter-gruppe"><span class="filter-titel">Stufe</span><div class="chips-wahl">${stufen}</div></div>
-<div class="filter-gruppe"><span class="filter-titel">Niveau</span><div class="chips-wahl">${niveaus}</div></div>
+<div class="filter-gruppe"><span class="filter-titel">Taxonomie</span><div class="chips-wahl">${stufen}</div></div>
 <div class="filter-gruppe"><label class="filter-titel" for="filter-status">Status</label><select id="filter-status" data-filter="status">
 ${[['', 'alle'], ['offen', 'noch offen'], ['nicht', 'noch nicht gelöst'], ['richtig', 'gelöst']].map(([w, t2]) => `<option value="${w}"${f.status === w ? ' selected' : ''}>${t2}</option>`).join('')}
 </select></div></div>`;
@@ -60,8 +58,7 @@ ${[['', 'alle'], ['offen', 'noch offen'], ['nicht', 'noch nicht gelöst'], ['ric
 
 function passt(a, f) {
   if (f.kap && a.kap !== f.kap) return false;
-  if (f.k.size && !f.k.has(a.k)) return false;
-  if (f.niveau.size && !f.niveau.has(a.niveau)) return false;
+  if (f.stufe.size && !f.stufe.has(stufeVon(a.k))) return false;
   const s = F.anzeigeStatus(a.schluessel);
   if (f.status === 'offen' && s !== 'offen') return false;
   if (f.status === 'nicht' && s === 'richtig') return false;
@@ -76,8 +73,7 @@ export function ueben(main, { thema, nr, params }) {
   const ziel = nr ? t.aufgaben.find((a) => a.nr === nr) : null;
   const filter = {
     kap: ziel ? ziel.kap : params.kap || '',
-    k: new Set((params.k || '').split(',').filter(Boolean).map(Number)),
-    niveau: new Set((params.niveau || '').split(',').filter(Boolean).map(Number)),
+    stufe: new Set((params.stufe || '').split(',').filter(Boolean).map(Number).filter((x) => x >= 1 && x <= 3)),
     status: params.status || '',
   };
   const aktiv = new Map(); // uid → Aufgabe (auch Varianten)
@@ -109,8 +105,7 @@ ${lehrer ? `<label class="schalter-option lehrer-option"><input type="checkbox" 
   function adresse() {
     const q = new URLSearchParams();
     if (filter.kap) q.set('kap', filter.kap);
-    if (filter.k.size) q.set('k', [...filter.k].sort().join(','));
-    if (filter.niveau.size) q.set('niveau', [...filter.niveau].sort().join(','));
+    if (filter.stufe.size) q.set('stufe', [...filter.stufe].sort().join(','));
     if (filter.status) q.set('status', filter.status);
     const s = q.toString();
     history.replaceState(null, '', `#/ueben/${t.id}${s ? '?' + s : ''}`);
@@ -118,8 +113,7 @@ ${lehrer ? `<label class="schalter-option lehrer-option"><input type="checkbox" 
 
   function aktualisiereFilterKnoepfe() {
     main.querySelectorAll('[data-filter="kap"]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.wert === filter.kap)));
-    main.querySelectorAll('[data-filter="k"]').forEach((b) => b.setAttribute('aria-pressed', String(filter.k.has(Number(b.dataset.wert)))));
-    main.querySelectorAll('[data-filter="niveau"]').forEach((b) => b.setAttribute('aria-pressed', String(filter.niveau.has(Number(b.dataset.wert)))));
+    main.querySelectorAll('[data-filter="stufe"]').forEach((b) => b.setAttribute('aria-pressed', String(filter.stufe.has(Number(b.dataset.wert)))));
   }
 
   main.querySelector('.filter').addEventListener('click', (e) => {

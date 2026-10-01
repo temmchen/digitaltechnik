@@ -2,7 +2,7 @@
 
 import { esc, z, htmlDip, htmlAddition, htmlSubtraktion } from '../kern/darstellung.js';
 import { nachBasis, auffuellen, wegAddition, wegSubtraktion } from '../kern/zahlen.js';
-import { stufe, TAXONOMIE, NIVEAU } from '../kern/taxonomie.js';
+import { STUFEN, stufe, stufeVon, prozess, PROZESSE } from '../kern/taxonomie.js';
 import { verteilung } from '../kern/pruefungsplan.js';
 import { feldName, fmtP, vorBreite } from './aufgabenkarte.js';
 
@@ -92,9 +92,10 @@ function rechenwegZeilen(a) {
 
 export function taxonomieTabelleHTML(aufgaben) {
   const v = verteilung(aufgaben);
-  const zeilen = TAXONOMIE.map((t) => {
-    const p = v.punkteJeStufe[t.k];
-    return `<tr><td><span class="chip chip-k k${t.k}">K${t.k}</span> ${t.name}</td><td>${v.anzahlJeStufe[t.k]}</td><td>${fmtP(p)}</td><td>${v.summe ? Math.round((p / v.summe) * 100) : 0} %</td></tr>`;
+  const zeilen = STUFEN.map((st) => {
+    const p = v.punkteJeStufe[st.s];
+    const prozesse = st.prozesse.filter((k) => v.anzahlJeProzess[k]).map((k) => `${prozess(k).name} ${v.anzahlJeProzess[k]}`).join(', ');
+    return `<tr><td><span class="chip chip-stufe s${st.s}">${st.zeichen} ${st.name}</span> ${st.titel} <small class="neben">(${st.afb})</small></td><td>${v.anzahlJeStufe[st.s]}${prozesse ? ` <small class="neben">(${prozesse})</small>` : ''}</td><td>${fmtP(p)}</td><td>${v.summe ? Math.round((p / v.summe) * 100) : 0} %</td></tr>`;
   }).join('');
   const kapitel = Object.entries(v.punkteJeKapitel).map(([k, p]) => `${esc(k)}: ${fmtP(p)} P`).join(' · ');
   return `<table class="taxonomie-tabelle"><thead><tr><th>Taxonomiestufe</th><th>Aufgaben</th><th>Punkte</th><th>Anteil</th></tr></thead><tbody>${zeilen}</tbody><tfoot><tr><th>Summe</th><th>${aufgaben.length}</th><th>${fmtP(v.summe)}</th><th>100 %</th></tr></tfoot></table><p class="d-klein-hinweis">Punkte je Kapitel: ${kapitel}</p>`;
@@ -110,10 +111,10 @@ export function pruefungsblattHTML(aufgaben, kopf, { loesung = false, taxonomieZ
 ${kopf.hinweis ? `<p class="d-hinweis">${esc(kopf.hinweis)}</p>` : ''}
 </header>`;
   const teile = aufgaben.map((a, i) => {
-    const st = stufe(a.k);
+    const st = stufe(stufeVon(a.k));
     const zeilen = loesung ? 0 : rechenwegZeilen(a);
     return `<section class="d-aufgabe">
-<div class="d-a-kopf"><b>Aufgabe ${i + 1}</b><span class="d-a-meta">${taxonomieZeigen ? `K${a.k} ${st.name} · ` : ''}${fmtP(a.punkte)} P${loesung ? ` · ${esc(a.schluessel)}${a.variante ? ' (neue Zahlen)' : ''}` : ''}</span></div>
+<div class="d-a-kopf"><b>Aufgabe ${i + 1}</b><span class="d-a-meta">${taxonomieZeigen ? `${st.zeichen} ${st.name} · ${prozess(a.k).name} · ` : ''}${fmtP(a.punkte)} P${loesung ? ` · ${esc(a.schluessel)}${a.variante ? ' (neue Zahlen)' : ''}` : ''}</span></div>
 <div class="d-a-frage">${a.frage}</div>
 <div class="d-a-antwort" style="${vorBreite(a)}">${druckFelder(a, loesung)}</div>
 ${zeilen ? `<div class="d-rechenweg" style="--zeilen:${zeilen}"><span>${a.k >= 4 ? 'Rechenweg / Begründung' : 'Rechenweg'}</span></div>` : ''}
@@ -129,18 +130,19 @@ ${loesung ? `<div class="d-a-loesung">${a.regel ? '<p><i>Mehrere Lösungen mögl
 /* ------------------------------------------------------------------ */
 
 export function matrixHTML(thema) {
-  const zaehle = (kap, k) => thema.aufgaben.filter((a) => a.kap === kap && a.k === k).length;
-  const kopf = TAXONOMIE.map((t) => `<th title="${t.name}"><span class="chip chip-k k${t.k}">K${t.k}</span></th>`).join('');
+  const zaehle = (kap, st) => thema.aufgaben.filter((a) => a.kap === kap && stufeVon(a.k) === st).length;
+  const kopf = STUFEN.map((st) => `<th title="${st.titel} (${st.afb})"><span class="chip chip-stufe s${st.s}">${st.zeichen} ${st.name}</span></th>`).join('');
   const zeilen = thema.kapitel.map((kap) => {
-    const zellen = TAXONOMIE.map((t) => {
-      const n = zaehle(kap.id, t.k);
+    const zellen = STUFEN.map((st) => {
+      const n = zaehle(kap.id, st.s);
       return `<td class="${n ? 'voll' : 'leer'}">${n || '·'}</td>`;
     }).join('');
     const summe = thema.aufgaben.filter((a) => a.kap === kap.id).length;
     return `<tr><th scope="row">${kap.id} · ${esc(kap.kurz)}</th>${zellen}<td class="summe">${summe}</td></tr>`;
   }).join('');
-  const fuss = TAXONOMIE.map((t) => `<td>${thema.aufgaben.filter((a) => a.k === t.k).length}</td>`).join('');
-  return `<div class="tabelle-scroll"><table class="matrix"><thead><tr><th>Kapitel</th>${kopf}<th>Σ</th></tr></thead><tbody>${zeilen}</tbody><tfoot><tr><th>Summe</th>${fuss}<td class="summe">${thema.aufgaben.length}</td></tr></tfoot></table></div>`;
+  const fuss = STUFEN.map((st) => `<td>${thema.aufgaben.filter((a) => stufeVon(a.k) === st.s).length}</td>`).join('');
+  const prozesse = PROZESSE.map((p) => `${p.name} ${thema.aufgaben.filter((a) => a.k === p.k).length}`).join(' · ');
+  return `<div class="tabelle-scroll"><table class="matrix"><thead><tr><th>Kapitel</th>${kopf}<th>Σ</th></tr></thead><tbody>${zeilen}</tbody><tfoot><tr><th>Summe</th>${fuss}<td class="summe">${thema.aufgaben.length}</td></tr></tfoot></table></div><p class="neben">Denkprozesse nach Bloom: ${prozesse}</p>`;
 }
 
 export function loesungsschluesselHTML(thema) {
@@ -153,7 +155,8 @@ export function loesungsschluesselHTML(thema) {
       else wert = loesungsText(f);
       return `<div class="ls-wert">${name}${wert}</div>`;
     }).join('');
-    return `<tr><td class="ls-nr">${a.nr}</td><td>${a.kap}</td><td><span class="chip chip-k k${a.k}">K${a.k}</span></td><td class="niveau n${a.niveau}">${NIVEAU[a.niveau].zeichen}</td><td>${fmtP(a.punkte)}</td><td class="ls-titel">${esc(a.titel)}</td><td>${a.regel ? '<i>Beispiel (mehrere Lösungen):</i>' : ''}${werte}</td></tr>`;
+    const st = stufe(stufeVon(a.k));
+    return `<tr><td class="ls-nr">${a.nr}</td><td>${a.kap}</td><td><span class="chip chip-stufe s${st.s}">${st.zeichen} ${st.name}</span></td><td>${prozess(a.k).name}</td><td>${fmtP(a.punkte)}</td><td class="ls-titel">${esc(a.titel)}</td><td>${a.regel ? '<i>Beispiel (mehrere Lösungen):</i>' : ''}${werte}</td></tr>`;
   }).join('');
-  return `<div class="tabelle-scroll"><table class="schluessel"><thead><tr><th>Nr.</th><th>Kap.</th><th>Stufe</th><th>Niveau</th><th>P</th><th>Aufgabe</th><th>Lösung</th></tr></thead><tbody>${zeilen}</tbody></table></div>`;
+  return `<div class="tabelle-scroll"><table class="schluessel"><thead><tr><th>Nr.</th><th>Kap.</th><th>Stufe</th><th>Denkprozess</th><th>P</th><th>Aufgabe</th><th>Lösung</th></tr></thead><tbody>${zeilen}</tbody></table></div>`;
 }

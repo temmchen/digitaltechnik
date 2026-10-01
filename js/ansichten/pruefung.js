@@ -1,7 +1,7 @@
 // pruefung.js – Prüfungstraining für Schülerinnen und Schüler: einstellen, schreiben, auswerten
 
 import { THEMEN, pool } from '../themen/index.js';
-import { TAXONOMIE } from '../kern/taxonomie.js';
+import { STUFEN, stufeVon } from '../kern/taxonomie.js';
 import { pruefeAufgabe } from '../kern/pruefen.js';
 import { stellePruefungZusammen, VORLAGEN } from '../kern/pruefungsplan.js';
 import { neuerStartwert } from '../kern/varianten.js';
@@ -24,7 +24,7 @@ function zeitText(ms) {
 }
 
 function planText(plan) {
-  return TAXONOMIE.filter((t) => plan[t.k]).map((t) => `K${t.k}×${plan[t.k]}`).join(' · ');
+  return STUFEN.filter((t) => plan[t.s]).map((t) => `${plan[t.s]}× ${t.zeichen} ${t.name}`).join(' · ');
 }
 
 /* ------------------------------------------------------------------ */
@@ -62,7 +62,7 @@ function einstellung(main, neu) {
   function vorschau() {
     const z = { vorlage: form.vorlage.value, auswahl: auswahl(), neueZahlen: true, startwert: 1 };
     const p = zusammenstellen(z);
-    const fehlt = Object.entries(p.fehlend).map(([k, n]) => `${n}× K${k}`).join(', ');
+    const fehlt = Object.entries(p.fehlend).map(([k, n]) => `${n}× ${STUFEN[k - 1].zeichen} ${STUFEN[k - 1].name}`).join(', ');
     info.innerHTML = p.aufgaben.length
       ? `${p.aufgaben.length} Aufgaben · etwa ${fmtP(p.punkte)} Punkte${fehlt ? ` · <span class="warnung">In den gewählten Kapiteln fehlen ${fehlt}.</span>` : ''}`
       : '<span class="warnung">Bitte mindestens ein Kapitel wählen.</span>';
@@ -188,8 +188,8 @@ function auswertung(main, z, neu) {
   const punkte = erg.reduce((s, r) => s + r.punkte, 0);
   const max = p.punkte;
   const prozent = max ? Math.round((punkte / max) * 100) : 0;
-  const jeStufe = TAXONOMIE.map((t) => {
-    const idx = p.aufgaben.map((a, i) => (a.k === t.k ? i : -1)).filter((i) => i >= 0);
+  const jeStufe = STUFEN.map((t) => {
+    const idx = p.aufgaben.map((a, i) => (stufeVon(a.k) === t.s ? i : -1)).filter((i) => i >= 0);
     const pm = idx.reduce((s, i) => s + p.aufgaben[i].punkte, 0);
     const pe = idx.reduce((s, i) => s + erg[i].punkte, 0);
     return { t, pm, pe };
@@ -201,8 +201,8 @@ function auswertung(main, z, neu) {
 <div class="ring gross" style="--anteil:${prozent}"><b>${prozent} %</b><small>${fmtP(punkte)} / ${fmtP(max)} P</small></div>
 <div class="ergebnis-text"><p class="ergebnis-urteil">${urteil(prozent)}</p>
 <p>${fmtP(punkte)} von ${fmtP(max)} Punkten · auf der 60er-Skala ${Math.round((punkte / max) * 60)} / 60 · Zeit ${dauer}</p>
-<div class="ls-stufen gross">${jeStufe.map((x) => `<div class="ls-stufe" title="K${x.t.k} ${x.t.name}"><span class="chip chip-k k${x.t.k}">K${x.t.k}</span><span class="mini-balken"><span style="width:${Math.round((x.pe / x.pm) * 100)}%"></span></span><small>${fmtP(x.pe)}/${fmtP(x.pm)} P</small></div>`).join('')}</div>
-${schwach.length ? `<p class="empfehlung">${icon('tipp')} Übe besonders: ${schwach.map((x) => `<a href="#/ueben/${THEMEN[0].id}?k=${x.t.k}">K${x.t.k} ${x.t.name}</a>`).join(', ')}</p>` : ''}
+<div class="ls-stufen gross">${jeStufe.map((x) => `<div class="ls-stufe" title="Stufe ${x.t.s} – ${x.t.name}: ${x.t.titel}"><span class="chip chip-stufe s${x.t.s}">${x.t.zeichen} ${x.t.name}</span><span class="mini-balken"><span style="width:${Math.round((x.pe / x.pm) * 100)}%"></span></span><small>${fmtP(x.pe)}/${fmtP(x.pm)} P</small></div>`).join('')}</div>
+${schwach.length ? `<p class="empfehlung">${icon('tipp')} Übe besonders: ${schwach.map((x) => `<a href="#/ueben/${THEMEN[0].id}?stufe=${x.t.s}">${x.t.zeichen} ${x.t.name} (${x.t.titel})</a>`).join(', ')}</p>` : ''}
 </div></section>
 <div class="knopfzeile"><button type="button" class="btn primaer" data-pr="neu">${icon('neu')}<span>Neue Prüfung</span></button><button type="button" class="btn" data-pr="drucken">${icon('drucken')}<span>Ergebnis drucken</span></button></div>
 <h2>Die Aufgaben im Einzelnen</h2>

@@ -1,7 +1,7 @@
 // varianten.js – Zufall mit Startwert und „neue Zahlen“ (allgemein für alle Themen)
 //
 // Eine Aufgabe kann eine Methode erzeugeVariante(r) mitbringen (siehe Thema-Bausteine).
-// variante() ruft sie auf und übernimmt Kapitel, Stufe, Niveau, Punkte und Nummer.
+// variante() ruft sie auf und übernimmt Kapitel, Denkprozess, Niveau, Punkte und Nummer.
 
 /** Reproduzierbarer Zufallsgenerator (mulberry32). Gleicher Startwert → gleiche Folge. */
 export function zufall(startwert) {

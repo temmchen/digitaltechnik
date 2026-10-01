@@ -28,6 +28,9 @@
   --err: #b42318; --err-bg: #fdeceb; --err-linie: #f2aaa4;
   --info: #24507e; --info-bg: #eaf1fa; --info-linie: #aac6e6;
   --gesehen: #56677d; --gesehen-bg: #edf0f4;
+  --s1: #27ae60; --s1-bg: #e5f6ec; --s1-t: #18723f;
+  --s2: #e67e22; --s2-bg: #fdefe1; --s2-t: #a4510d;
+  --s3: #c0392b; --s3-bg: #fbe8e6; --s3-t: #9e2a1f;
   --k1: #f0ebfd; --k1t: #3d2a7a;
   --k2: #e0d6fb; --k2t: #3a2577;
   --k3: #c7b5f5; --k3t: #2e1a6b;
@@ -57,7 +60,8 @@
     --err: #ff8f86; --err-bg: #331716; --err-linie: #7a2e29;
     --info: #92bff2; --info-bg: #13253a; --info-linie: #2c4f78;
     --gesehen: #a6b4c6; --gesehen-bg: #1d2836;
-    --k1: #241d3d; --k1t: #cfc3f7; --k2: #2f2552; --k2t: #ddd3fb; --k3: #3d2f6e; --k3t: #ece6fd;
+    --s1-bg: #11301f; --s1-t: #72dca0; --s2-bg: #36220f; --s2-t: #f6ae6d; --s3-bg: #3a1714; --s3-t: #ff9d92;
+  --k1: #241d3d; --k1t: #cfc3f7; --k2: #2f2552; --k2t: #ddd3fb; --k3: #3d2f6e; --k3t: #ece6fd;
     --k4: #5b45a8; --k4t: #ffffff; --k5: #8a6fe0; --k5t: #0d0a1a; --k6: #b7a3f3; --k6t: #0d0a1a;
     --schatten: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.25);
     --schatten-gross: 0 10px 40px rgba(0, 0, 0, 0.5);
@@ -75,6 +79,7 @@
   --err: #ff8f86; --err-bg: #331716; --err-linie: #7a2e29;
   --info: #92bff2; --info-bg: #13253a; --info-linie: #2c4f78;
   --gesehen: #a6b4c6; --gesehen-bg: #1d2836;
+  --s1-bg: #11301f; --s1-t: #72dca0; --s2-bg: #36220f; --s2-t: #f6ae6d; --s3-bg: #3a1714; --s3-t: #ff9d92;
   --k1: #241d3d; --k1t: #cfc3f7; --k2: #2f2552; --k2t: #ddd3fb; --k3: #3d2f6e; --k3t: #ece6fd;
   --k4: #5b45a8; --k4t: #ffffff; --k5: #8a6fe0; --k5t: #0d0a1a; --k6: #b7a3f3; --k6t: #0d0a1a;
   --schatten: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.25);
@@ -190,6 +195,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .k4 { --kf: var(--k4); --kt: var(--k4t); } .k5 { --kf: var(--k5); --kt: var(--k5t); } .k6 { --kf: var(--k6); --kt: var(--k6t); }
 .chip-k.k1, .chip-k.k2, .chip-k.k3, .chip-k.k4, .chip-k.k5, .chip-k.k6 { background: var(--kf); color: var(--kt); }
 .chip-kap { background: var(--flaeche-3); }
+.s1 { --sf: var(--s1); --sbg: var(--s1-bg); --st: var(--s1-t); }
+.s2 { --sf: var(--s2); --sbg: var(--s2-bg); --st: var(--s2-t); }
+.s3 { --sf: var(--s3); --sbg: var(--s3-bg); --st: var(--s3-t); }
+.chip-stufe { background: var(--sbg); color: var(--st); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sf) 45%, transparent); letter-spacing: 0.02em; }
+.chip-prozess { background: transparent; color: var(--tinte-2); font-weight: 600; border: 1px dashed var(--linie-2); }
 .chip-p { background: transparent; border: 1px solid var(--linie-2); }
 .chip-var { background: var(--hex-bg); color: var(--hex); }
 .chip-thema { background: var(--kopf); color: #fff; }
@@ -525,7 +535,11 @@ tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
 .thema-karte .knopfzeile { margin-top: auto; padding-top: 6px; }
 .thema-karte.geplant { border-style: dashed; box-shadow: none; background: transparent; align-items: center; justify-content: center; text-align: center; color: var(--leise); min-height: 200px; }
 .treppe { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; align-items: end; margin-top: 18px; }
-.stufe { background: var(--flaeche); border: 1px solid var(--linie); border-top: 6px solid var(--kf); border-radius: 12px; padding: 12px; box-shadow: var(--schatten); min-height: calc(190px + var(--h) * 22px); display: flex; flex-direction: column; gap: 4px; }
+.stufe { background: var(--flaeche); border: 1px solid var(--linie); border-top: 6px solid var(--sf, var(--kf)); border-radius: 12px; padding: 12px; box-shadow: var(--schatten); min-height: calc(190px + var(--h) * 22px); display: flex; flex-direction: column; gap: 4px; }
+.treppe.drei { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.treppe.drei .stufe { min-height: calc(230px + var(--h) * 34px); padding: 16px; }
+.treppe.drei .stufe-kopf b { font-size: 1.05rem; }
+.stufe-prozesse { font-size: 0.83rem; font-weight: 650; color: var(--st, var(--tinte-2)); margin: 2px 0 0; }
 .stufe-kopf { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
 .stufe-frage { font-weight: 650; font-size: 0.9rem; margin: 4px 0 0; }
 .stufe-text { font-size: 0.83rem; color: var(--tinte-2); margin: 0; }
@@ -602,6 +616,8 @@ tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
 .chip-knopf:hover { border-color: var(--akzent); color: var(--tinte); }
 .chip-knopf[aria-pressed="true"] { background: var(--akzent); border-color: var(--akzent); color: var(--auf-akzent); }
 .chip-knopf.k-knopf[aria-pressed="true"] { background: var(--kf); border-color: var(--kf); color: var(--kt); }
+.chip-knopf.s-knopf { color: var(--st); }
+.chip-knopf.s-knopf[aria-pressed="true"] { background: var(--sf); border-color: var(--sf); color: #fff; }
 .chip-knopf[aria-pressed="true"] .niveau { color: inherit; }
 .chip-check { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--linie-2); border-radius: 999px; padding: 4px 12px 4px 8px; font-size: 0.84rem; font-weight: 600; cursor: pointer; background: var(--flaeche); }
 .chip-check:has(input:checked) { border-color: var(--akzent); background: var(--akzent-hell); }
@@ -695,6 +711,7 @@ tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
 .zusammenfassung-gitter { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 20px; align-items: start; }
 @media (max-width: 900px) { .zusammenfassung-gitter { grid-template-columns: minmax(0, 1fr); } }
 .taxonomie-tabelle { width: 100%; }
+.taxonomie-tabelle td:nth-child(n+3), .taxonomie-tabelle th:nth-child(n+3) { white-space: nowrap; }
 .taxonomie-tabelle tfoot th { background: var(--flaeche-2); padding: 7px 12px; text-align: left; }
 .auswahl-liste { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
 .auswahl-liste li { display: flex; align-items: center; gap: 10px; background: var(--flaeche-2); border-radius: 10px; padding: 6px 10px; margin: 0; }
@@ -831,7 +848,8 @@ tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
   .held { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .held-bild { padding: 16px; }
   .hb-zeile { font-size: 1.35rem; }
-  .treppe { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .treppe, .treppe.drei { grid-template-columns: minmax(0, 1fr); }
+  .treppe.drei .stufe { min-height: 0; }
   .stufe { min-height: 0; }
   .lektion-karte { grid-template-columns: auto 1fr; }
   .lk-meta { grid-column: 2; white-space: normal; }

@@ -1,54 +1,64 @@
-// taxonomie.js – Taxonomiestufen und Niveaus (gelten für alle Themen des Kompendiums)
+// taxonomie.js – Taxonomiestufen (gelten für alle Themen des Kompendiums)
 //
-// Lernzieltaxonomie nach Bloom, überarbeitet von Anderson & Krathwohl (2001):
-// K1 Erinnern · K2 Verstehen · K3 Anwenden · K4 Analysieren · K5 Bewerten · K6 Erschaffen.
-// Die Stufe beschreibt den Denkprozess, nicht die Schwierigkeit – dafür gibt es das Niveau.
+// Drei Stufen wie in Toms Skripten (ELTEC, MINT, PRODI) und Prüfungen:
+//   Stufe 1 · leicht •   = Wissen und Verstehen          (Anforderungsbereich I)
+//   Stufe 2 · mittel ••  = Anwenden                       (Anforderungsbereich II)
+//   Stufe 3 · schwer ••• = Analysieren, Bewerten, Transfer (Anforderungsbereich III)
+// Feiner trägt jede Aufgabe den Denkprozess nach Bloom (überarbeitet von Anderson &
+// Krathwohl) im Feld `k` (1–6). Bewusst ohne „K1 … K6“, weil K-Nummern bei uns
+// die Kompetenzen eines Moduls bezeichnen.
 
-export const TAXONOMIE = [
+export const STUFEN = [
   {
-    k: 1, name: 'Erinnern', frage: 'Was weiß ich?',
-    beschreibung: 'Begriffe, Fakten und Regeln wiedergeben.',
-    operatoren: ['nennen', 'angeben', 'aufzählen'],
-    beispiel: 'Gib die Zweierpotenzen 2⁰ bis 2⁷ an.',
+    s: 1, name: 'leicht', zeichen: '•', afb: 'AFB I', titel: 'Wissen und Verstehen',
+    frage: 'Weiß ich es und kann ich es erklären?',
+    beschreibung: 'Begriffe, Regeln und Zusammenhänge wiedergeben und erklären.',
+    prozesse: [1, 2],
+    operatoren: ['nennen', 'angeben', 'erklären', 'zuordnen'],
   },
   {
-    k: 2, name: 'Verstehen', frage: 'Kann ich es erklären?',
-    beschreibung: 'Zusammenhänge erklären, Begriffe zuordnen, Regeln deuten.',
-    operatoren: ['erklären', 'beschreiben', 'zuordnen', 'weiterzählen'],
-    beispiel: 'Erkläre, warum 1₂ + 1₂ einen Übertrag ergibt.',
-  },
-  {
-    k: 3, name: 'Anwenden', frage: 'Kann ich das Verfahren ausführen?',
-    beschreibung: 'Ein gelerntes Verfahren in einer bekannten Situation sicher ausführen.',
+    s: 2, name: 'mittel', zeichen: '••', afb: 'AFB II', titel: 'Anwenden',
+    frage: 'Kann ich das Verfahren sicher ausführen?',
+    beschreibung: 'Gelernte Verfahren in bekannten Situationen sicher ausführen.',
+    prozesse: [3],
     operatoren: ['umwandeln', 'berechnen', 'addieren', 'subtrahieren'],
-    beispiel: 'Wandle 156₁₀ in eine Dualzahl um.',
   },
   {
-    k: 4, name: 'Analysieren', frage: 'Durchschaue ich die Struktur?',
-    beschreibung: 'Zahlen und Rechnungen untersuchen, vergleichen, Fehler finden, Umkehraufgaben lösen.',
-    operatoren: ['untersuchen', 'vergleichen', 'ermitteln', 'bestimmen'],
-    beispiel: 'Bestimme x in x + 0110₂ = 1 0011₂.',
-  },
-  {
-    k: 5, name: 'Bewerten', frage: 'Kann ich begründet urteilen?',
-    beschreibung: 'Lösungen und Aussagen nach Kriterien prüfen, beurteilen und Lösungswege auswählen.',
-    operatoren: ['beurteilen', 'prüfen', 'entscheiden'],
-    beispiel: 'Prüfe Pauls Ergebnis mit einer Probe und beurteile es.',
-  },
-  {
-    k: 6, name: 'Erschaffen', frage: 'Kann ich selbst etwas entwickeln?',
-    beschreibung: 'Eigene Lösungen oder Aufgaben entwerfen, die vorgegebene Bedingungen erfüllen.',
-    operatoren: ['konstruieren', 'entwerfen', 'erfinden'],
-    beispiel: 'Erfinde eine Subtraktion mit genau zwei Entleihungen.',
+    s: 3, name: 'schwer', zeichen: '•••', afb: 'AFB III', titel: 'Analysieren, Bewerten, Transfer',
+    frage: 'Durchschaue ich es und kann ich begründet urteilen?',
+    beschreibung: 'Strukturen untersuchen, Lösungen beurteilen und eigene Lösungen entwickeln.',
+    prozesse: [4, 5, 6],
+    operatoren: ['untersuchen', 'bestimmen', 'beurteilen', 'konstruieren'],
   },
 ];
 
-export const NIVEAU = {
-  1: { name: 'Basis', zeichen: '●○○' },
-  2: { name: 'Standard', zeichen: '●●○' },
-  3: { name: 'Experte', zeichen: '●●●' },
-};
+/** Denkprozesse nach Bloom (Anderson & Krathwohl). */
+export const PROZESSE = [
+  { k: 1, name: 'Erinnern', beschreibung: 'Fakten und Regeln wiedergeben', operatoren: ['nennen', 'angeben'] },
+  { k: 2, name: 'Verstehen', beschreibung: 'Zusammenhänge erklären, zuordnen', operatoren: ['erklären', 'zuordnen', 'weiterzählen'] },
+  { k: 3, name: 'Anwenden', beschreibung: 'ein Verfahren ausführen', operatoren: ['umwandeln', 'berechnen', 'addieren', 'subtrahieren'] },
+  { k: 4, name: 'Analysieren', beschreibung: 'untersuchen, vergleichen, Fehler finden, Umkehraufgaben', operatoren: ['untersuchen', 'vergleichen', 'ermitteln', 'bestimmen'] },
+  { k: 5, name: 'Bewerten', beschreibung: 'nach Kriterien prüfen und beurteilen', operatoren: ['beurteilen', 'prüfen', 'entscheiden'] },
+  { k: 6, name: 'Erschaffen', beschreibung: 'eigene Lösungen nach Bedingungen entwerfen', operatoren: ['konstruieren', 'erfinden'] },
+];
 
-export function stufe(k) {
-  return TAXONOMIE[k - 1];
+/** Taxonomiestufe (1–3) zum Denkprozess k (1–6). */
+export function stufeVon(k) {
+  if (k <= 2) return 1;
+  if (k === 3) return 2;
+  return 3;
+}
+
+export function stufe(s) {
+  return STUFEN[s - 1];
+}
+
+export function prozess(k) {
+  return PROZESSE[k - 1];
+}
+
+/** Kurzform für Chips und Druck, z. B. „•• mittel“. */
+export function stufenText(s) {
+  const st = STUFEN[s - 1];
+  return `${st.zeichen} ${st.name}`;
 }

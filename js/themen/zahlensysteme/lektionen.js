@@ -483,7 +483,7 @@ ${htmlDip(9, [1, 3, 6])}
 
 <h2>So gehst du in der Prüfung vor</h2>
 <ol class="schritte">
-<li><b>Operator lesen:</b> „Gib an“ (K1) verlangt nur das Ergebnis, „Erkläre“ (K2) einen Satz, „Wandle um“ (K3) den Rechenweg, „Beurteile“ (K5) eine begründete Entscheidung.</li>
+<li><b>Operator und Stufe lesen:</b> „Gib an“ (• leicht) verlangt nur das Ergebnis, „Erkläre“ (• leicht) einen kurzen Satz, „Wandle um“ (•• mittel) den vollständigen Rechenweg, „Untersuche“ und „Beurteile“ (••• schwer) eine begründete Antwort.</li>
 <li><b>Zielsystem markieren:</b> In welchem System wird das Ergebnis verlangt? Mit wie vielen Bit?</li>
 <li><b>Weg wählen</b> und den Rechenweg vollständig aufschreiben.</li>
 <li><b>Probe</b> machen: zurückrechnen oder bei der Subtraktion addieren.</li>

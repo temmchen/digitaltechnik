@@ -1,7 +1,8 @@
 // aufgaben.js – Thema Zahlensysteme: die 100 Aufgaben (Klasse DP1ET, DITEC1)
 //
-// Jede Aufgabe hat: Kapitel (A–I), Taxonomiestufe k (1–6, Bloom/Anderson-Krathwohl),
-// Niveau (1 Basis, 2 Standard, 3 Experte) und Punkte für die Prüfung.
+// Jede Aufgabe hat: Kapitel (A–I), Denkprozess k (1–6, Bloom/Anderson-Krathwohl; daraus folgt
+// die Taxonomiestufe leicht/mittel/schwer), ein internes Niveau (Zahlengröße, steuert u. a. den
+// Platz für den Rechenweg auf dem Prüfungsblatt) und Punkte für die Prüfung.
 // Ergebnisse von Umwandlungen und Rechnungen werden berechnet, nicht abgetippt.
 
 import { wegDivisionsrest, wegStellenwert, wegDualZuHex, wegHexZuDual, wegAddition, wegSubtraktion, wegZweierpotenzen } from '../../kern/zahlen.js';

@@ -1,7 +1,7 @@
 // aufgaben.test.mjs – alle 100 Aufgaben: Aufbau, Taxonomie, Musterlösungen, Regeln
 import { test, gleich, wahr, htmlAusgewogen } from './harness.mjs';
 import { THEMEN, ALLE_AUFGABEN, aufgabeNachSchluessel } from '../js/themen/index.js';
-import { TAXONOMIE } from '../js/kern/taxonomie.js';
+import { PROZESSE, STUFEN, stufeVon } from '../js/kern/taxonomie.js';
 import { pruefeAufgabe, musterAntworten, feldLoesungText, REGELN } from '../js/kern/pruefen.js';
 import { nachBasis, wegSubtraktion, einsen } from '../js/kern/zahlen.js';
 
@@ -32,11 +32,16 @@ test('Verteilung auf Kapitel', () => {
   for (const k of KAPITEL) gleich(ist[k.id], soll[k.id], 'Kapitel ' + k.id);
 });
 
-test('Verteilung auf Taxonomiestufen K1 … K6', () => {
+test('Verteilung auf Denkprozesse (Bloom) und Taxonomiestufen leicht/mittel/schwer', () => {
   const ist = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
   AUFGABEN.forEach((a) => ist[a.k]++);
   gleich(JSON.stringify(ist), JSON.stringify({ 1: 10, 2: 10, 3: 58, 4: 12, 5: 7, 6: 3 }));
-  gleich(TAXONOMIE.length, 6);
+  const stufen = { 1: 0, 2: 0, 3: 0 };
+  AUFGABEN.forEach((a) => stufen[stufeVon(a.k)]++);
+  gleich(JSON.stringify(stufen), JSON.stringify({ 1: 20, 2: 58, 3: 22 }));
+  gleich(PROZESSE.length, 6);
+  gleich(STUFEN.length, 3);
+  gleich(STUFEN.map((s) => s.zeichen).join(' '), '• •• •••');
 });
 
 test('Pflichtangaben jeder Aufgabe', () => {

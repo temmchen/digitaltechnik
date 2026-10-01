@@ -260,7 +260,7 @@ export function pruefeFeld(feld, wert) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Regeln für offene Aufgaben (K6: mehrere richtige Lösungen)           */
+/* Regeln für offene Aufgaben (Erschaffen: mehrere richtige Lösungen)   */
 /* ------------------------------------------------------------------ */
 
 function bin(feld, wert) {

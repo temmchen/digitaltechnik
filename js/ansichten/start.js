@@ -1,7 +1,7 @@
 // start.js – Startseite des Kompendiums: Themen, Lernstand, Taxonomiestufen, Arbeitsweise
 
 import { THEMEN, ALLE_AUFGABEN } from '../themen/index.js';
-import { TAXONOMIE } from '../kern/taxonomie.js';
+import { STUFEN, PROZESSE, stufeVon } from '../kern/taxonomie.js';
 import { statistik } from '../kern/fortschritt.js';
 import { icon } from '../kern/icons.js';
 import { esc, z } from '../kern/darstellung.js';
@@ -23,7 +23,7 @@ function themaKarte(t, i) {
 export function start(main) {
   document.title = 'Digitaltechnik · Kompendium DP1ET';
   const st = statistik(ALLE_AUFGABEN);
-  const jeStufe = TAXONOMIE.map((t) => ALLE_AUFGABEN.filter((a) => a.k === t.k).length);
+  const jeStufe = STUFEN.map((st) => ALLE_AUFGABEN.filter((a) => stufeVon(a.k) === st.s).length);
   const erstes = THEMEN[0];
   const bearbeitet = st.gesamt - st.offen;
   const lernstand = bearbeitet
@@ -36,7 +36,7 @@ export function start(main) {
   <div class="held-text">
     <p class="kicker">Kompendium · Klasse DP1ET · Modul DITEC1</p>
     <h1>Grundlagen der Digitaltechnik</h1>
-    <p class="lead">Schritt für Schritt erklärt – mit interaktiven Werkzeugen, ${ALLE_AUFGABEN.length} Aufgaben auf sechs Taxonomiestufen und einem Prüfungstraining.</p>
+    <p class="lead">Schritt für Schritt erklärt – mit interaktiven Werkzeugen, ${ALLE_AUFGABEN.length} Aufgaben auf drei Taxonomiestufen und einem Prüfungstraining.</p>
     <div class="knopfzeile">
       <a class="btn primaer gross" href="#/lernen/${erstes.id}/1">${icon('lernen')}<span>Mit Lektion 1 starten</span></a>
       <a class="btn gross" href="#/ueben">${icon('ueben')}<span>Aufgaben üben</span></a>
@@ -59,9 +59,9 @@ ${lernstand}
   </div>
 </section>
 <section class="abschnitt" id="taxonomie">
-  <h2>Sechs Taxonomiestufen</h2>
-  <p>Jede Aufgabe trägt eine <b>Taxonomiestufe</b> (K1 bis K6, nach Bloom). Sie sagt, welche Denkleistung verlangt ist – nicht, wie schwer die Aufgabe ist. Dafür gibt es das <b>Niveau</b> (●○○ Basis, ●●○ Standard, ●●● Experte). In der Prüfung findest du dieselben Stufen wieder. Das fett gedruckte Verb im Aufgabentext (der <b>Operator</b>) verrät die Stufe.</p>
-  <ol class="treppe">${TAXONOMIE.map((t, i) => `<li class="stufe k${t.k}" style="--h:${i}"><div class="stufe-kopf"><span class="chip chip-k k${t.k}">K${t.k}</span><b>${t.name}</b></div><p class="stufe-frage">${t.frage}</p><p class="stufe-text">${t.beschreibung}</p><p class="stufe-op">${t.operatoren.join(' · ')}</p><p class="stufe-anzahl">${jeStufe[i]} Aufgaben</p></li>`).join('')}</ol>
+  <h2>Drei Taxonomiestufen</h2>
+  <p>Jede Aufgabe trägt eine <b>Taxonomiestufe</b> – wie in den Skripten und in der Prüfung: <b>• leicht</b>, <b>•• mittel</b> und <b>••• schwer</b>. Die Stufe sagt, welche Denkleistung verlangt ist. Zusätzlich steht bei jeder Aufgabe der <b>Denkprozess</b>, zum Beispiel „Anwenden“ oder „Bewerten“. Das fett gedruckte Verb im Aufgabentext – der <b>Operator</b> – verrät, was zu tun ist.</p>
+  <ol class="treppe drei">${STUFEN.map((st, i) => `<li class="stufe s${st.s}" style="--h:${i}"><div class="stufe-kopf"><span class="chip chip-stufe s${st.s}">${st.zeichen} ${st.name}</span><b>${st.titel}</b><small class="neben">Anforderungsbereich ${st.afb.replace('AFB ', '')}</small></div><p class="stufe-frage">${st.frage}</p><p class="stufe-text">${st.beschreibung}</p><p class="stufe-prozesse">Denkprozesse: ${st.prozesse.map((k) => PROZESSE[k - 1].name).join(', ')}</p><p class="stufe-op">${st.operatoren.join(' · ')}</p><p class="stufe-anzahl">${jeStufe[i]} Aufgaben</p></li>`).join('')}</ol>
 </section>
 <section class="abschnitt">
   <h2>So arbeitest du mit dieser Seite</h2>

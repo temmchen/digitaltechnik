@@ -5,6 +5,7 @@ import { zufall, variante, hatVarianten, mische, mischeOptionen } from '../js/ke
 import { stellePruefungZusammen, ersetzeAufgabe, parallelGruppe, VORLAGEN, verfuegbar, verteilung } from '../js/kern/pruefungsplan.js';
 import { pruefeAufgabe, musterAntworten } from '../js/kern/pruefen.js';
 import { nachBasis, wegAddition, wegSubtraktion } from '../js/kern/zahlen.js';
+import { stufeVon } from '../js/kern/taxonomie.js';
 
 const AUFGABEN = ALLE_AUFGABEN.filter((a) => a.thema === 'zahlensysteme');
 
@@ -68,7 +69,7 @@ test('Prüfung nach Vorlage: Taxonomie-Plan wird eingehalten', () => {
       const soll = Object.values(v.plan).reduce((x, y) => x + y, 0);
       gleich(p.aufgaben.length, soll, name);
       const vt = verteilung(p.aufgaben);
-      for (let k = 1; k <= 6; k++) gleich(vt.anzahlJeStufe[k], v.plan[k] || 0, `${name} K${k}`);
+      for (let k = 1; k <= 3; k++) gleich(vt.anzahlJeStufe[k], v.plan[k] || 0, `${name} Stufe ${k}`);
       gleich(new Set(p.aufgaben.map((a) => a.nr)).size, soll, 'keine Aufgabe doppelt');
       gleich(vt.summe, p.punkte);
       for (let i = 1; i < p.aufgaben.length; i++) wahr(p.aufgaben[i - 1].ordnung < p.aufgaben[i].ordnung, 'sortiert');
@@ -88,10 +89,10 @@ test('Gleicher Startwert → gleiche Prüfung; anderer Startwert → andere', ()
 
 test('Kapitelauswahl und fehlende Aufgaben werden gemeldet', () => {
   const v = verfuegbar(pool({ zahlensysteme: ['G', 'H'] }));
-  gleich(v[6], 2);
-  const p = stellePruefungZusammen({ pool: pool({ zahlensysteme: ['A'] }), plan: { 1: 2, 5: 1 }, startwert: 3 });
-  gleich(p.aufgaben.length, 2);
-  gleich(p.fehlend[5], 1);
+  gleich(v[3], 6);
+  const p = stellePruefungZusammen({ pool: pool({ zahlensysteme: ['A'] }), plan: { 1: 2, 3: 3 }, startwert: 3 });
+  gleich(p.aufgaben.length, 3);
+  gleich(p.fehlend[3], 2);
   p.aufgaben.forEach((a) => gleich(a.kap, 'A'));
 });
 
@@ -100,9 +101,9 @@ test('Aufgabe ersetzen behält die Taxonomiestufe', () => {
   for (let i = 0; i < p.aufgaben.length; i++) {
     const neu = ersetzeAufgabe(p.aufgaben, i, { pool: ALLE_AUFGABEN, startwert: 1000 + i });
     gleich(neu.length, p.aufgaben.length);
-    const kAlt = p.aufgaben.map((a) => a.k).sort().join();
-    const kNeu = neu.map((a) => a.k).sort().join();
-    gleich(kNeu, kAlt);
+    const sAlt = p.aufgaben.map((a) => stufeVon(a.k)).sort().join();
+    const sNeu = neu.map((a) => stufeVon(a.k)).sort().join();
+    gleich(sNeu, sAlt);
   }
 });
 
@@ -128,5 +129,13 @@ test('Gemischte Antwortreihenfolge behält die richtige Antwort', () => {
         gleich(m.felder[i].optionen[m.felder[i].loesung].text, f.optionen[f.loesung].text, a.schluessel);
       });
     }
+  }
+});
+
+test('Stufe „schwer“ mischt die Denkprozesse', () => {
+  for (let s = 1; s <= 30; s++) {
+    const p = stellePruefungZusammen({ pool: ALLE_AUFGABEN, plan: { 1: 0, 2: 0, 3: 3 }, startwert: s });
+    const prozesse = new Set(p.aufgaben.map((a) => a.k));
+    gleich(prozesse.size, 3, 'Analysieren, Bewerten und Erschaffen je einmal (Startwert ' + s + ')');
   }
 });

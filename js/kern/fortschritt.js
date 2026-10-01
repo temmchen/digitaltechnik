@@ -4,6 +4,7 @@
 // e = beim ersten Versuch richtig, l = Lösung angesehen, t = Zeitpunkt.
 
 import { lies, schreibe } from './speicher.js';
+import { stufeVon } from './taxonomie.js';
 
 const SCHLUESSEL = 'fortschritt';
 let daten = null;
@@ -60,13 +61,14 @@ export function versuche(schluessel) {
 /** Zählt für eine Aufgabenliste: richtig, teilweise, falsch, gesehen, offen; dazu je Stufe und Kapitel. */
 export function statistik(aufgaben) {
   const s = { richtig: 0, teilweise: 0, falsch: 0, gesehen: 0, offen: 0, gesamt: aufgaben.length, ersterVersuch: 0, jeStufe: {}, jeKapitel: {} };
-  for (let k = 1; k <= 6; k++) s.jeStufe[k] = { richtig: 0, gesamt: 0 };
+  for (let k = 1; k <= 3; k++) s.jeStufe[k] = { richtig: 0, gesamt: 0 };
   for (const a of aufgaben) {
     const st = anzeigeStatus(a.schluessel);
     s[st]++;
     if (eintrag(a.schluessel)?.e) s.ersterVersuch++;
-    s.jeStufe[a.k].gesamt++;
-    if (st === 'richtig') s.jeStufe[a.k].richtig++;
+    const stufe = stufeVon(a.k);
+    s.jeStufe[stufe].gesamt++;
+    if (st === 'richtig') s.jeStufe[stufe].richtig++;
     const kap = (s.jeKapitel[a.kap] ||= { richtig: 0, gesamt: 0, bearbeitet: 0 });
     kap.gesamt++;
     if (st === 'richtig') kap.richtig++;

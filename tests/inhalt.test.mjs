@@ -1,7 +1,7 @@
 // inhalt.test.mjs – Lektionen, Merkhilfe, Werkzeuge und Verweise aller Themen
 import { test, gleich, wahr, htmlAusgewogen } from './harness.mjs';
 import { THEMEN, WIDGETS } from '../js/themen/index.js';
-import { TAXONOMIE } from '../js/kern/taxonomie.js';
+import { PROZESSE } from '../js/kern/taxonomie.js';
 
 test('Jedes Thema: Lektionen passen zu den Kapiteln', () => {
   for (const t of THEMEN) {
@@ -10,7 +10,7 @@ test('Jedes Thema: Lektionen passen zu den Kapiteln', () => {
       gleich(l.nr, i + 1, `${t.id}: Nummer`);
       wahr(t.kapitel.some((k) => k.id === l.kap && k.lektion === l.nr), `${t.id} Lektion ${l.nr}: Kapitel ${l.kap}`);
       wahr(l.titel && l.untertitel && l.dauer > 0 && l.inhalt.length > 500, `${t.id} Lektion ${l.nr}: Angaben`);
-      wahr(l.ziele.length >= 3 && l.ziele.every(([text, k]) => text && TAXONOMIE.some((s) => s.k === k)), `${t.id} Lektion ${l.nr}: Lernziele`);
+      wahr(l.ziele.length >= 3 && l.ziele.every(([text, k]) => text && PROZESSE.some((s) => s.k === k)), `${t.id} Lektion ${l.nr}: Lernziele`);
     });
   }
 });

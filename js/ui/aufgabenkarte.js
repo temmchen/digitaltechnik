@@ -6,7 +6,7 @@
 import { icon } from '../kern/icons.js';
 import { esc, z } from '../kern/darstellung.js';
 import { nachBasis, auffuellen } from '../kern/zahlen.js';
-import { stufe, NIVEAU } from '../kern/taxonomie.js';
+import { stufeVon, stufe, prozess } from '../kern/taxonomie.js';
 import { pruefeAufgabe, musterAntworten } from '../kern/pruefen.js';
 import { hatVarianten } from '../kern/varianten.js';
 import { kapitelVon } from '../themen/index.js';
@@ -36,13 +36,15 @@ export function ohneTags(html) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Kopf: Kapitel, Taxonomiestufe, Niveau, Punkte                       */
+/* Kopf: Kapitel, Taxonomiestufe, Denkprozess, Punkte                  */
 /* ------------------------------------------------------------------ */
 
 export function chipsHTML(a, { mitThema = false } = {}) {
   const kap = kapitelVon(a);
-  const st = stufe(a.k);
-  return `${mitThema ? `<span class="chip chip-thema">${esc(a.kuerzel)}</span>` : ''}<span class="chip chip-kap" title="Kapitel ${a.kap}: ${esc(kap ? kap.titel : '')}">${a.kap} · ${esc(kap ? kap.kurz : '')}</span><span class="chip chip-k k${a.k}" title="Taxonomiestufe K${a.k} – ${st.name}: ${esc(st.beschreibung)}">K${a.k} ${st.name}</span><span class="niveau n${a.niveau}" title="Niveau: ${NIVEAU[a.niveau].name}" aria-label="Niveau ${NIVEAU[a.niveau].name}">${NIVEAU[a.niveau].zeichen}</span><span class="chip chip-p" title="Punkte in der Prüfung">${fmtP(a.punkte)} P</span>`;
+  const s = stufeVon(a.k);
+  const st = stufe(s);
+  const pr = prozess(a.k);
+  return `${mitThema ? `<span class="chip chip-thema">${esc(a.kuerzel)}</span>` : ''}<span class="chip chip-kap" title="Kapitel ${a.kap}: ${esc(kap ? kap.titel : '')}">${a.kap} · ${esc(kap ? kap.kurz : '')}</span><span class="chip chip-stufe s${s}" title="Taxonomiestufe ${s} – ${st.name} (${st.afb}): ${st.titel}">${st.zeichen} ${st.name}</span><span class="chip chip-prozess" title="Denkprozess nach Bloom: ${pr.name} – ${esc(pr.beschreibung)}">${pr.name}</span><span class="chip chip-p" title="Punkte in der Prüfung">${fmtP(a.punkte)} P</span>`;
 }
 
 /* ------------------------------------------------------------------ */

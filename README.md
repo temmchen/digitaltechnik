@@ -33,20 +33,18 @@ Tetraden-Brücke, Rechenwerk für Addition und Subtraktion – jeweils Schritt f
 Die Zahlensysteme haben feste Farben (Dezimal blau, Dual grün, Hexadezimal orange), immer
 zusammen mit dem Index.
 
-### 100 Aufgaben auf sechs Taxonomiestufen
+### 100 Aufgaben auf drei Taxonomiestufen
 
-Lernzieltaxonomie nach Bloom, überarbeitet von Anderson & Krathwohl. Die **Stufe** beschreibt
-den Denkprozess, das **Niveau** (●○○ Basis, ●●○ Standard, ●●● Experte) die Schwierigkeit.
-Der **Operator** steht fett im Aufgabentext.
+Wie in den ELTEC-/MINT-Skripten und in den Prüfungen: **• leicht**, **•• mittel**, **••• schwer**
+(Anforderungsbereiche I–III, Farben grün/orange/rot). Zusätzlich trägt jede Aufgabe ihren
+**Denkprozess** nach Bloom (überarbeitet von Anderson & Krathwohl). Der **Operator** steht fett im
+Aufgabentext. Bewusst ohne „K1 … K6“, weil K-Nummern die Kompetenzen eines Moduls bezeichnen.
 
-| Stufe | Operatoren | Aufgaben |
-| --- | --- | ---: |
-| K1 Erinnern | nennen, angeben | 10 |
-| K2 Verstehen | erklären, zuordnen, weiterzählen | 10 |
-| K3 Anwenden | umwandeln, berechnen, addieren, subtrahieren | 58 |
-| K4 Analysieren | untersuchen, vergleichen, ermitteln, bestimmen | 12 |
-| K5 Bewerten | beurteilen, prüfen, entscheiden | 7 |
-| K6 Erschaffen | konstruieren, erfinden (mehrere richtige Lösungen) | 3 |
+| Taxonomiestufe | Denkprozesse | Operatoren | Aufgaben |
+| --- | --- | --- | ---: |
+| • leicht – Wissen und Verstehen (AFB I) | Erinnern 10, Verstehen 10 | nennen, angeben, erklären, zuordnen | 20 |
+| •• mittel – Anwenden (AFB II) | Anwenden 58 | umwandeln, berechnen, addieren, subtrahieren | 58 |
+| ••• schwer – Analysieren, Bewerten, Transfer (AFB III) | Analysieren 12, Bewerten 7, Erschaffen 3 | untersuchen, bestimmen, beurteilen, konstruieren | 22 |
 
 - **Erst die eigene Antwort, dann die Lösung:** Die Lösung mit Rechenweg wird erst freigeschaltet,
   wenn eine gültige Antwort geprüft wurde. Ungültige Eingaben (z. B. eine 2 im Dualsystem) zählen
@@ -60,14 +58,14 @@ Der **Operator** steht fett im Aufgabentext.
 
 ### Prüfungstraining
 
-Kurztest (8 Aufgaben), Prüfung (14 Aufgaben, 45 min) oder große Prüfung (22 Aufgaben) nach festem
-Taxonomie-Plan, wahlweise mit neuen Zahlen und Zeitanzeige. Keine Rückmeldung bis zur Abgabe;
+Kurztest (8 Aufgaben), Prüfung (14 Aufgaben, 45 min: 5 leicht, 7 mittel, 2 schwer – nach Punkten etwa 25 / 50 / 25 %) oder große
+Prüfung (22 Aufgaben) nach festem Taxonomie-Plan, wahlweise mit neuen Zahlen und Zeitanzeige. Keine Rückmeldung bis zur Abgabe;
 danach Punkte, Prozent, 60er-Skala, Auswertung je Stufe und jede Aufgabe mit Lösung.
 
 ### Lehrerbereich (mit Passwort)
 
 - Lösungen in „Üben“ sofort sichtbar, „Musterlösung eintragen“ zum Vorführen am Beamer
-- **Prüfung erstellen:** Aufgaben je Taxonomiestufe und Kapitel, neue Zahlen per Startwert,
+- **Prüfung erstellen:** Aufgaben je Taxonomiestufe (leicht/mittel/schwer, Denkprozesse gemischt) und Kapitel, neue Zahlen per Startwert,
   Gruppe B (andere Zahlen, gemischte Antworten), Aufgaben einzeln ersetzen, druckfertiges
   **Aufgabenblatt** (Antwortkästchen, Raster für den Rechenweg, schriftliche Rechnungen) und
   **Lösungsblatt** mit Rechenwegen und Taxonomie-Übersicht (A4, „Als PDF sichern“)
@@ -111,7 +109,7 @@ Tests (JavaScriptCore, auf jedem Mac vorhanden):
 ```
 
 Sie prüfen alle Umwandlungen und Rechenwege (u. a. alle Additionen und Subtraktionen bis 255),
-die Fehlerdiagnosen, jede der 100 Musterlösungen, alle Lösungen der K6-Aufgaben, die Varianten,
+die Fehlerdiagnosen, jede der 100 Musterlösungen, alle Lösungen der offenen Aufgaben (Erschaffen), die Varianten,
 die Prüfungszusammenstellung und das HTML aller Lektionen.
 
 Lokal ansehen (ES-Module brauchen einen Webserver):
@@ -127,10 +125,11 @@ python3 -m http.server 8000
    Aufgabenschlüssel, z. B. `LG` → `LG-12`), `symbol`, `titel`, `kurz`, `beschreibung`, `stand`,
    `kapitel` (A, B, … mit `lektion`), `lektionen`, `aufgaben`, `merkhilfe()`, optional `widgets`.
 3. Aufgaben mit den Bausteinen aus `js/kern/felder.js` (`zahlFeld`, `wahlFeld`, `listeFeld`,
-   `mehrfachFeld`, `bitsFeld`) schreiben. Jede Aufgabe braucht `kap`, `k` (1–6), `niveau` (1–3),
-   `punkte`, `titel`, `frage` (Operator fett), `felder`, `tipp`, `loesung`. Rechenaufgaben können
-   mit `erzeugeVariante(r)` neue Zahlen liefern; offene K6-Aufgaben prüft eine Regel in `REGELN`
-   (`js/kern/pruefen.js`).
+   `mehrfachFeld`, `bitsFeld`) schreiben. Jede Aufgabe braucht `kap`, `k` (Denkprozess 1–6: Erinnern,
+   Verstehen → leicht; Anwenden → mittel; Analysieren, Bewerten, Erschaffen → schwer), `niveau` (1–3,
+   Platz für den Rechenweg), `punkte`, `titel`, `frage` (Operator fett), `felder`, `tipp`, `loesung`.
+   Rechenaufgaben können mit `erzeugeVariante(r)` neue Zahlen liefern; offene Aufgaben mit mehreren
+   richtigen Lösungen prüft eine Regel in `REGELN` (`js/kern/pruefen.js`).
 4. Thema in `js/themen/index.js` in die Liste `THEMEN` eintragen.
 5. Tests laufen lassen (`inhalt.test.mjs` prüft jedes Thema automatisch) und README ergänzen.
 
@@ -151,7 +150,8 @@ Premier thème : les systèmes de numération décimal, binaire et hexadécimal 
 les sens, addition et soustraction binaires (nombres entiers positifs uniquement).
 
 - 9 leçons avec objectifs, encadrés « à retenir », exemples résolus et outils interactifs
-- 100 exercices répartis sur six niveaux taxonomiques (Bloom, révisée par Anderson & Krathwohl) ;
+- 100 exercices répartis sur trois niveaux taxonomiques (facile • / moyen •• / difficile •••, avec le
+  processus cognitif de Bloom révisée) ;
   la solution détaillée n’apparaît qu’après une première réponse ; les erreurs typiques sont
   reconnues et expliquées ; « nouveaux nombres » pour s’entraîner sans fin
 - Entraînement à l’examen avec barème et évaluation par niveau taxonomique
