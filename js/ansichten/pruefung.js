@@ -197,7 +197,7 @@ function auswertung(main, z, neu) {
   const schwach = jeStufe.filter((x) => x.pe / x.pm < 0.6);
   const dauer = z.ende && z.beginn ? zeitText(z.ende - z.beginn) : '–';
   main.innerHTML = `<div class="ansicht"><header class="seitenkopf"><p class="kicker">Prüfungstraining · Auswertung</p><h1>Dein Ergebnis</h1></header>
-<section class="ergebnis karte-flaeche">
+<section class="pr-ergebnis karte-flaeche">
 <div class="ring gross" style="--anteil:${prozent}"><b>${prozent} %</b><small>${fmtP(punkte)} / ${fmtP(max)} P</small></div>
 <div class="ergebnis-text"><p class="ergebnis-urteil">${urteil(prozent)}</p>
 <p>${fmtP(punkte)} von ${fmtP(max)} Punkten · auf der 60er-Skala ${Math.round((punkte / max) * 60)} / 60 · Zeit ${dauer}</p>

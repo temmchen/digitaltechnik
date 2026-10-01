@@ -309,11 +309,12 @@ tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
 .t-wert { font-size: 0.75rem; font-family: var(--mono); }
 .schriftlich { font-family: var(--mono); font-size: 1.2rem; border-collapse: separate; border-spacing: 0; margin: 6px 0; }
 .schriftlich th { font-family: var(--sans); font-weight: 600; font-size: 0.8rem; color: var(--leise); text-align: right; padding: 0 10px 0 0; white-space: nowrap; }
-.schriftlich td { width: 1.6em; height: 1.75em; text-align: center; padding: 0; border-radius: 6px; }
+.schriftlich td { width: 1.6em; height: 1.75em; text-align: center; padding: 0; }
 .schriftlich tr.uebertraege td { font-size: 0.78rem; color: var(--warn); font-weight: 750; height: 1.3em; vertical-align: bottom; }
-.schriftlich tr.summe td, .schriftlich tr.summe th { border-top: 2.5px solid var(--tinte); }
+.schriftlich tr.summe td { border-top: 2.5px solid var(--tinte); }
 .schriftlich tr.summe td { font-weight: 750; color: var(--dual); }
-.schriftlich td.aktiv { background: var(--hex-bg); box-shadow: inset 0 0 0 2px var(--hex); }
+.schriftlich td.aktiv { background: var(--hex-bg); box-shadow: inset 0 0 0 2px var(--hex); border-radius: 6px; }
+.schriftlich tr.summe td.aktiv { border-radius: 0 0 6px 6px; }
 .spaltenliste { font-size: 0.95rem; padding-left: 1.4em; }
 .spaltenliste li { margin: 4px 0; }
 .probe { background: var(--flaeche-2); border: 1px dashed var(--linie-2); border-radius: 10px; padding: 8px 14px; margin: 10px 0; }
@@ -637,7 +638,7 @@ tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
 .pl-stand { color: var(--tinte-2); font-size: 0.92rem; }
 .pruefung-leiste .btn { margin-left: auto; }
 @media (max-width: 860px) { .pruefung-leiste { top: 56px; } }
-.ergebnis { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; margin-bottom: 14px; }
+.pr-ergebnis { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; margin-bottom: 14px; }
 .ergebnis-text { flex: 1; min-width: 260px; }
 .ergebnis-urteil { font-size: 1.15rem; font-weight: 700; }
 .ls-stufen.gross { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); margin: 10px 0; }
