@@ -1,0 +1,19 @@
+{
+  "name": "Digitaltechnik · Kompendium DP1ET",
+  "short_name": "Digitaltechnik",
+  "description": "Grundlagen der Digitaltechnik: Zahlensysteme, Umwandlungen, Dualarithmetik – mit Lektionen, Aufgaben auf sechs Taxonomiestufen und Prüfungstraining.",
+  "lang": "de",
+  "dir": "ltr",
+  "id": "/digitaltechnik/",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#16324f",
+  "theme_color": "#16324f",
+  "categories": ["education"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

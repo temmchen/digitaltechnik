@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Digitaltechnik · Kompendium DP1ET</title>
+<meta name="description" content="Grundlagen der Digitaltechnik für die Klasse DP1ET (DITEC1): Zahlensysteme Dezimal, Dual und Hexadezimal, Umwandlungen, Addition und Subtraktion von Dualzahlen – mit Lektionen, 100 Aufgaben auf sechs Taxonomiestufen und Prüfungstraining.">
+<meta name="author" content="Tom Bleyer">
+<meta name="theme-color" content="#16324f" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b121a" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Digitaltechnik · Kompendium DP1ET">
+<meta property="og:description" content="Zahlensysteme Dezimal, Dual, Hexadezimal: umwandeln, addieren, subtrahieren – mit Lektionen, 100 Aufgaben auf sechs Taxonomiestufen und Prüfungstraining.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://temmchen.github.io/digitaltechnik/">
+<meta property="og:image" content="https://temmchen.github.io/digitaltechnik/icons/icon-512.png">
+<meta property="og:locale" content="de_LU">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/app.css">
+<script>
+  // Hell/Dunkel und Schriftgröße vor dem ersten Zeichnen setzen (kein Aufblitzen)
+  try {
+    var t = JSON.parse(localStorage.getItem('digitaltechnik.thema'));
+    if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+    var s = JSON.parse(localStorage.getItem('digitaltechnik.schrift'));
+    if (s === 'gross' || s === 'beamer') document.documentElement.dataset.schrift = s;
+  } catch (e) { /* ohne Speicher geht es auch */ }
+</script>
+<script type="module" src="js/app.js"></script>
+</head>
+<body>
+<a class="sprungmarke" href="#inhalt">Zum Inhalt springen</a>
+<header class="kopf">
+  <div class="kopf-innen">
+    <a class="marke" href="#/" aria-label="Digitaltechnik – Startseite">
+      <span class="marke-logo" aria-hidden="true"><span>0</span><span>1</span></span>
+      <span class="marke-text"><b>Digitaltechnik</b><small>Kompendium · DP1ET</small></span>
+    </a>
+    <nav class="hauptnav" aria-label="Hauptnavigation"></nav>
+    <div class="werkzeuge">
+      <button type="button" class="werkzeug schrift-knopf" data-werkzeug="schrift"><span aria-hidden="true">A<small>A</small></span></button>
+      <button type="button" class="werkzeug" data-werkzeug="thema"></button>
+      <button type="button" class="werkzeug" data-werkzeug="qr" title="QR-Code für die Klasse (Taste Q)" aria-label="QR-Code zeigen"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="6" height="6" rx="1"/><rect x="14.5" y="3.5" width="6" height="6" rx="1"/><rect x="3.5" y="14.5" width="6" height="6" rx="1"/><path d="M14.5 14.5h2.5v2.5h-2.5zM20.5 14.5v.01M14.5 20.5h.01M18 18h2.5v2.5H18z"/></svg></button>
+    </div>
+  </div>
+</header>
+<main id="inhalt" tabindex="-1">
+  <noscript><p class="noscript">Diese Seite braucht JavaScript. Bitte aktiviere JavaScript im Browser.</p></noscript>
+</main>
+<footer class="fuss">
+  <div class="fuss-innen">
+    <p><b>Digitaltechnik</b> · Kompendium für die Klasse DP1ET (Modul DITEC1) · © 2026 Tom Bleyer · LTEtt</p>
+    <p><a href="#/merkhilfe/zahlensysteme">Merkhilfe</a> · <a href="https://github.com/temmchen/digitaltechnik" rel="noopener">Quelltext</a> · <span class="fuss-version"></span> · Dein Lernstand bleibt in diesem Browser.</p>
+  </div>
+</footer>
+<div class="qr-ueberlagerung" hidden role="dialog" aria-modal="true" aria-label="QR-Code zur Seite">
+  <div class="qr-karte">
+    <div class="qr-bild"></div>
+    <p class="qr-adresse">temmchen.github.io/digitaltechnik</p>
+    <button type="button" class="btn qr-schliessen">Schließen <kbd>Esc</kbd></button>
+  </div>
+</div>
+</body>
+</html>
