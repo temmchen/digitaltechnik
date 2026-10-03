@@ -8,6 +8,7 @@ const dateien = [
   './aufgaben.test.mjs', // alle 100 Aufgaben
   './varianten.test.mjs', // neue Zahlen, Prüfungen zusammenstellen
   './inhalt.test.mjs', // Lektionen und Lehrerinhalte
+  './manifest.test.mjs', // kompendium.json für die Lerndashboards
 ];
 
 for (const f of dateien) {

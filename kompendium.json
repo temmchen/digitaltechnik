@@ -1,0 +1,218 @@
+{
+  "format": 1,
+  "art": "kompendium",
+  "titel": "Digitaltechnik · Kompendium DP1ET",
+  "klasse": "DP1ET",
+  "modul": "DITEC1",
+  "schule": "LTEtt",
+  "autor": "Tom Bleyer",
+  "adresse": "https://temmchen.github.io/digitaltechnik/",
+  "repo": "temmchen/digitaltechnik",
+  "stand": "2026-10-01",
+  "taxonomie": [
+    {
+      "stufe": 1,
+      "name": "leicht",
+      "zeichen": "•",
+      "afb": "AFB I",
+      "titel": "Wissen und Verstehen"
+    },
+    {
+      "stufe": 2,
+      "name": "mittel",
+      "zeichen": "••",
+      "afb": "AFB II",
+      "titel": "Anwenden"
+    },
+    {
+      "stufe": 3,
+      "name": "schwer",
+      "zeichen": "•••",
+      "afb": "AFB III",
+      "titel": "Analysieren, Bewerten, Transfer"
+    }
+  ],
+  "summe": {
+    "themen": 1,
+    "lektionen": 9,
+    "kapitel": 9,
+    "aufgaben": 100,
+    "stufen": {
+      "1": 20,
+      "2": 58,
+      "3": 22
+    }
+  },
+  "bereiche": [
+    {
+      "id": "start",
+      "titel": "Start",
+      "hash": "#/"
+    },
+    {
+      "id": "lernen",
+      "titel": "Lernen",
+      "hash": "#/lernen"
+    },
+    {
+      "id": "ueben",
+      "titel": "Üben",
+      "hash": "#/ueben"
+    },
+    {
+      "id": "pruefung",
+      "titel": "Prüfungstraining",
+      "hash": "#/pruefung"
+    },
+    {
+      "id": "merkhilfe",
+      "titel": "Merkhilfe",
+      "hash": "#/merkhilfe"
+    },
+    {
+      "id": "lehrer",
+      "titel": "Lehrerbereich",
+      "hash": "#/lehrer"
+    }
+  ],
+  "themen": [
+    {
+      "nr": 1,
+      "id": "zahlensysteme",
+      "kuerzel": "ZS",
+      "symbol": "01",
+      "titel": "Zahlensysteme und Dualarithmetik",
+      "kurz": "Zahlensysteme",
+      "beschreibung": "Dezimal, Dual und Hexadezimal: umwandeln, vergleichen und jonglieren – dazu Dualzahlen addieren und subtrahieren. Nur positive ganze Zahlen.",
+      "stand": "2026-10-01",
+      "hash": "#/lernen/zahlensysteme",
+      "aufgaben": 100,
+      "stufen": {
+        "1": 20,
+        "2": 58,
+        "3": 22
+      },
+      "kapitel": [
+        {
+          "id": "A",
+          "titel": "Grundlagen der Stellenwertsysteme",
+          "lektion": 1,
+          "aufgaben": 10
+        },
+        {
+          "id": "B",
+          "titel": "Dual → Dezimal",
+          "lektion": 2,
+          "aufgaben": 12
+        },
+        {
+          "id": "C",
+          "titel": "Dezimal → Dual",
+          "lektion": 3,
+          "aufgaben": 12
+        },
+        {
+          "id": "D",
+          "titel": "Hexadezimal → Dezimal",
+          "lektion": 4,
+          "aufgaben": 10
+        },
+        {
+          "id": "E",
+          "titel": "Dezimal → Hexadezimal",
+          "lektion": 5,
+          "aufgaben": 10
+        },
+        {
+          "id": "F",
+          "titel": "Hexadezimal ↔ Dual",
+          "lektion": 6,
+          "aufgaben": 12
+        },
+        {
+          "id": "G",
+          "titel": "Addition von Dualzahlen",
+          "lektion": 7,
+          "aufgaben": 12
+        },
+        {
+          "id": "H",
+          "titel": "Subtraktion von Dualzahlen",
+          "lektion": 8,
+          "aufgaben": 12
+        },
+        {
+          "id": "I",
+          "titel": "Gemischte Aufgaben und Anwendungen",
+          "lektion": 9,
+          "aufgaben": 10
+        }
+      ],
+      "lektionen": [
+        {
+          "nr": 1,
+          "titel": "Stellenwertsysteme",
+          "untertitel": "Wie Zahlen aufgebaut sind – und warum Computer nur 0 und 1 kennen",
+          "kapitel": "A",
+          "hash": "#/lernen/zahlensysteme/1"
+        },
+        {
+          "nr": 2,
+          "titel": "Dual → Dezimal",
+          "untertitel": "Die Stellenwertmethode",
+          "kapitel": "B",
+          "hash": "#/lernen/zahlensysteme/2"
+        },
+        {
+          "nr": 3,
+          "titel": "Dezimal → Dual",
+          "untertitel": "Divisionsrestverfahren und Zweierpotenzen-Methode",
+          "kapitel": "C",
+          "hash": "#/lernen/zahlensysteme/3"
+        },
+        {
+          "nr": 4,
+          "titel": "Hexadezimal → Dezimal",
+          "untertitel": "Das Sechzehnersystem und seine Stellenwerte",
+          "kapitel": "D",
+          "hash": "#/lernen/zahlensysteme/4"
+        },
+        {
+          "nr": 5,
+          "titel": "Dezimal → Hexadezimal",
+          "untertitel": "Divisionsrestverfahren mit 16",
+          "kapitel": "E",
+          "hash": "#/lernen/zahlensysteme/5"
+        },
+        {
+          "nr": 6,
+          "titel": "Hexadezimal ↔ Dual",
+          "untertitel": "Tetraden: der direkte Weg ohne Rechnen",
+          "kapitel": "F",
+          "hash": "#/lernen/zahlensysteme/6"
+        },
+        {
+          "nr": 7,
+          "titel": "Addition von Dualzahlen",
+          "untertitel": "Schriftlich addieren mit Übertrag",
+          "kapitel": "G",
+          "hash": "#/lernen/zahlensysteme/7"
+        },
+        {
+          "nr": 8,
+          "titel": "Subtraktion von Dualzahlen",
+          "untertitel": "Schriftlich subtrahieren mit Entleihung",
+          "kapitel": "H",
+          "hash": "#/lernen/zahlensysteme/8"
+        },
+        {
+          "nr": 9,
+          "titel": "Jonglieren mit Zahlensystemen",
+          "untertitel": "Strategien, Anwendungen und Prüfungstipps",
+          "kapitel": "I",
+          "hash": "#/lernen/zahlensysteme/9"
+        }
+      ]
+    }
+  ]
+}

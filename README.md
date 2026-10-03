@@ -101,6 +101,8 @@ Reine ES-Module ohne Build und ohne Abhängigkeiten, keine externen Schriften od
 | `js/app.js` | Navigation, Router, Hell/Dunkel, Schriftgröße, QR-Code |
 | `js/tresor.js` | verschlüsselter Lehrerzugang (wird im privaten Repo erzeugt) |
 | `css/app.css` | Erscheinungsbild, Dunkelmodus, Druck (A4) |
+| `kompendium.json` | Inhaltsverzeichnis als Daten (Themen, Lektionen mit Adressen, Aufgaben je Stufe) für andere Werkzeuge, z. B. die Lerndashboards im Präsentations-Filemanager |
+| `werkzeuge/` | `kompendium-json.mjs` schreibt `kompendium.json` neu (Vorlage: `manifest.mjs`) |
 
 Tests (JavaScriptCore, auf jedem Mac vorhanden):
 
@@ -110,7 +112,7 @@ Tests (JavaScriptCore, auf jedem Mac vorhanden):
 
 Sie prüfen alle Umwandlungen und Rechenwege (u. a. alle Additionen und Subtraktionen bis 255),
 die Fehlerdiagnosen, jede der 100 Musterlösungen, alle Lösungen der offenen Aufgaben (Erschaffen), die Varianten,
-die Prüfungszusammenstellung und das HTML aller Lektionen.
+die Prüfungszusammenstellung, das HTML aller Lektionen und ob `kompendium.json` zum Inhalt passt.
 
 Lokal ansehen (ES-Module brauchen einen Webserver):
 
@@ -131,7 +133,10 @@ python3 -m http.server 8000
    Rechenaufgaben können mit `erzeugeVariante(r)` neue Zahlen liefern; offene Aufgaben mit mehreren
    richtigen Lösungen prüft eine Regel in `REGELN` (`js/kern/pruefen.js`).
 4. Thema in `js/themen/index.js` in die Liste `THEMEN` eintragen.
-5. Tests laufen lassen (`inhalt.test.mjs` prüft jedes Thema automatisch) und README ergänzen.
+5. `kompendium.json` neu schreiben, damit die Lerndashboards das Thema mit seinen Lektionen zeigen:
+   `/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc -m werkzeuge/kompendium-json.mjs`
+6. Tests laufen lassen (`inhalt.test.mjs` prüft jedes Thema automatisch, `manifest.test.mjs` meldet eine
+   veraltete `kompendium.json`) und README ergänzen.
 
 Start, Lernen, Üben, Prüfungstraining, Prüfungsgenerator, Lösungsschlüssel und Taxonomie-Matrix
 übernehmen das neue Thema ohne weitere Änderung.
